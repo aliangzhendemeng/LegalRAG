@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <title>法律合同智能问答系统</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: "Microsoft YaHei", sans-serif;
+        }
+        body {
+            background: #f5f7fa;
+            padding: 30px;
+        }
+        .container {
+            max-width: 900px;
+            margin: 0 auto;
+            background: #fff;
+            border-radius: 16px;
+            padding: 30px;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.08);
+        }
+        .title {
+            text-align: center;
+            font-size: 24px;
+            font-weight: bold;
+            color: #2c3e50;
+            margin-bottom: 25px;
+        }
+        .chat-box {
+            height: 500px;
+            border: 1px solid #e1e4e8;
+            border-radius: 12px;
+            padding: 20px;
+            overflow-y: auto;
+            background: #fafbfc;
+            margin-bottom: 20px;
+        }
+        .msg {
+            margin-bottom: 14px;
+            max-width: 80%;
+            line-height: 1.5;
+        }
+        .user {
+            margin-left: auto;
+            background: #0077ff;
+            color: white;
+            padding: 10px 14px;
+            border-radius: 12px 12px 0 12px;
+        }
+        .ai {
+            background: #e1e4e8;
+            color: #2c3e50;
+            padding: 10px 14px;
+            border-radius: 12px 12px 12px 0;
+        }
+        .input-area {
+            display: flex;
+            gap: 10px;
+        }
+        input {
+            flex: 1;
+            padding: 14px 16px;
+            border: 1px solid #ddd;
+            border-radius: 10px;
+            font-size: 15px;
+            outline: none;
+        }
+        button {
+            padding: 14px 24px;
+            background: #0077ff;
+            color: white;
+            border: none;
+            border-radius: 10px;
+            cursor: pointer;
+            font-size: 15px;
+        }
+        button:hover {
+            background: #0066dd;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="title">⚖️ 法律合同智能问答系统（RAG）</div>
+        <div class="chat-box" id="chatBox"></div>
+        <div class="input-area">
+            <input type="text" id="question" placeholder="请输入问题...">
+            <button onclick="sendQuestion()">发送</button>
+        </div>
+    </div>
+
+    <script>
+        async function sendQuestion() {
+            const q = document.getElementById("question").value.trim();
+            if (!q) return;
+
+            const chatBox = document.getElementById("chatBox");
+            chatBox.innerHTML += `<div class="msg user">${q}</div>`;
+            document.getElementById("question").value = "";
+
+            try {
+                const res = await fetch("http://127.0.0.1:8000/ask", {
+                    method: "POST",
+                    headers: { "Content-Type": "application/json" },
+                    body: JSON.stringify({ question: q })
+                });
+                const data = await res.json();
+                const answer = data.answer || "请求失败";
+                chatBox.innerHTML += `<div class="msg ai">${answer}</div>`;
+            } catch (e) {
+                chatBox.innerHTML += `<div class="msg ai">请求失败，请检查服务是否启动</div>`;
+            }
+            chatBox.scrollTop = chatBox.scrollHeight;
+        }
+    </script>
+</body>
+</html>

@@ -1,0 +1,9 @@
+python-dotenv
+langchain
+langchain-openai
+fastapi
+uvicorn
+pypdf
+scikit-learn
+numpy
+pydantic

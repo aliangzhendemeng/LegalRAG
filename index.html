@@ -93,6 +93,9 @@
     </div>
 
     <script>
+        // 用于保存对话历史，传给后端实现多轮对话
+        let historyList = [];
+
         async function sendQuestion() {
             const q = document.getElementById("question").value.trim();
             if (!q) return;
@@ -102,17 +105,30 @@
             document.getElementById("question").value = "";
 
             try {
+                // 拼接历史对话格式
+                let historyStr = historyList.join("\n");
+
                 const res = await fetch("http://127.0.0.1:8000/ask", {
                     method: "POST",
                     headers: { "Content-Type": "application/json" },
-                    body: JSON.stringify({ question: q })
+                    body: JSON.stringify({
+                        question: q,
+                        history: historyStr  // 传给后端
+                    })
                 });
+
                 const data = await res.json();
                 const answer = data.answer || "请求失败";
+
+                // 保存本轮对话到历史
+                historyList.push(`用户：${q}`);
+                historyList.push(`AI：${answer}`);
+
                 chatBox.innerHTML += `<div class="msg ai">${answer}</div>`;
             } catch (e) {
                 chatBox.innerHTML += `<div class="msg ai">请求失败，请检查服务是否启动</div>`;
             }
+
             chatBox.scrollTop = chatBox.scrollHeight;
         }
     </script>

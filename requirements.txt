@@ -1,10 +1,16 @@
 python-dotenv
 langchain
 langchain-openai
+langchain-community
+langchain-huggingface
+langchain-chroma
+chromadb
+sentence-transformers
+rank_bm25
+jieba
 fastapi
 uvicorn
 pypdf
 scikit-learn
 numpy
 pydantic
-langchain-community

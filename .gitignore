@@ -12,3 +12,9 @@ __pycache__/
 
 # 系统文件
 .DS_Store
+
+# 向量库持久化目录
+.chroma/
+
+# Claude Code 本地配置（不共享）
+.claude/
